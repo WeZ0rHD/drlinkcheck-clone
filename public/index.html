@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Link Auditor — DrLinkCheck-like MVP</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="top">
+  <h1>Link Auditor <span class="tag">MVP</span></h1>
+  <p class="sub">Bounded crawler · real HTTP evidence + <code>observed_at</code> · UNKNOWN when blocked</p>
+</header>
+
+<main>
+  <section class="card" id="setup">
+    <h2>1 · Project URL</h2>
+    <form id="crawl-form">
+      <label class="grow">Start URL
+        <input id="f-url" type="url" required placeholder="https://example.com" value="https://example.com">
+      </label>
+      <div class="grid">
+        <label>Max pages <input id="f-maxpages" type="number" min="1" max="5000" value="100"></label>
+        <label>Max depth <input id="f-depth" type="number" min="0" max="20" value="5"></label>
+        <label>Concurrency <input id="f-conc" type="number" min="1" max="16" value="5"></label>
+        <label>Delay ms <input id="f-delay" type="number" min="0" max="10000" value="200"></label>
+      </div>
+      <label>Exclusions (one substring or /regex/ per line)
+        <textarea id="f-exclude" rows="2" placeholder="/logout&#10;?session="></textarea>
+      </label>
+      <div class="checks">
+        <label><input id="f-external" type="checkbox" checked> Check external links</label>
+        <label><input id="f-images" type="checkbox"> Check images (fetch image URLs)</label>
+        <label><input id="f-robots" type="checkbox" checked> Respect robots.txt + sitemap</label>
+      </div>
+      <button type="submit" id="btn-start">Start crawl</button>
+      <span id="form-error" class="error"></span>
+    </form>
+    <div id="progress" class="hidden">
+      <div class="bar"><div id="bar-fill"></div></div>
+      <p id="progress-text">Starting…</p>
+    </div>
+  </section>
+
+  <section class="card hidden" id="results">
+    <h2>2 · Results</h2>
+    <div id="summary" class="cards"></div>
+    <div id="groups" class="chips"></div>
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="Search source, target or anchor…">
+      <select id="f-kind">
+        <option value="">all kinds</option>
+        <option value="internal">internal</option>
+        <option value="external">external</option>
+      </select>
+      <select id="f-status">
+        <option value="">any status</option>
+        <option value="2xx">2xx</option>
+        <option value="3xx">3xx</option>
+        <option value="4xx">4xx</option>
+        <option value="5xx">5xx</option>
+        <option value="UNKNOWN">UNKNOWN</option>
+      </select>
+      <button id="btn-csv">Export CSV</button>
+      <button id="btn-json">Export JSON</button>
+      <span id="count"></span>
+    </div>
+    <table id="links">
+      <thead><tr>
+        <th>Source</th><th>Anchor</th><th>Target</th><th>Status</th><th>Issue</th><th>Observed</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <aside id="detail" class="hidden">
+    <button id="detail-close" aria-label="Close">×</button>
+    <h3>Link detail</h3>
+    <dl id="detail-dl"></dl>
+    <h4>Source → target</h4>
+    <svg id="graph" viewBox="0 0 560 150" role="img" aria-label="source to target graph"></svg>
+    <h4>Redirect chain</h4>
+    <ol id="chain"></ol>
+  </aside>
+</main>
+
+<footer>
+  Static crawl only in this UI. JS-rendered mode is a separate CLI option
+  (<code>--js</code> + <code>LINKAUDIT_JS_RENDERER</code>) and is always labeled.
+</footer>
+<script src="/app.js"></script>
+</body>
+</html>

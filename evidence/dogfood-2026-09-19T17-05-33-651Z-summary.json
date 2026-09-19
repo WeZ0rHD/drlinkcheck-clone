@@ -1,0 +1,27 @@
+{
+  "at": "2026-09-19T17:05:33.666Z",
+  "parts": [
+    {
+      "target": "fixture",
+      "pages": 8,
+      "links": 16,
+      "groups": {
+        "ok": 9,
+        "broken": 2,
+        "redirect": 1,
+        "redirect_loop": 1,
+        "anchor_missing": 1,
+        "noindex_destination": 1,
+        "canonicalized": 1
+      }
+    },
+    {
+      "target": "https://example.com/",
+      "pages": 1,
+      "links": 1,
+      "groups": {
+        "not_checked": 1
+      }
+    }
+  ]
+}

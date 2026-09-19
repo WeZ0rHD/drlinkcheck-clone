@@ -1,0 +1,16 @@
+{
+  "name": "drlinkcheck-clone",
+  "version": "0.1.0",
+  "description": "DrLinkCheck-like website link auditor — bounded crawler, issue groups, searchable link table, CSV/JSON export. Zero dependencies.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "crawl": "node src/cli.js",
+    "dogfood": "node scripts/dogfood.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "license": "MIT"
+}

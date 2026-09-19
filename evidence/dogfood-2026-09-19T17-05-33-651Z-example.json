@@ -1,0 +1,42 @@
+{
+  "target": "https://example.com/",
+  "robotsRespected": true,
+  "summary": {
+    "pages": 1,
+    "links": 1,
+    "broken": 0,
+    "redirects": 0,
+    "loops": 0,
+    "unknown": 0,
+    "blocked": 0,
+    "excluded": 0,
+    "groups": {
+      "not_checked": 1
+    },
+    "pageGroups": {
+      "ok": 1
+    }
+  },
+  "links": [
+    {
+      "sourceUrl": "https://example.com/",
+      "anchorText": "Learn more",
+      "targetUrl": "https://iana.org/domains/example",
+      "kind": "a",
+      "internal": false,
+      "observedAt": "2026-09-19T17:05:38.100Z",
+      "renderer": "static",
+      "status": null,
+      "statusLabel": "NOT_CHECKED",
+      "finalUrl": "https://iana.org/domains/example",
+      "issue": "not_checked",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reason": "includeExternal disabled"
+      }
+    }
+  ]
+}

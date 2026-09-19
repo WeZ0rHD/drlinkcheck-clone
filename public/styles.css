@@ -1,0 +1,49 @@
+:root { color-scheme: light dark; --bg: #0e1116; --card: #171c24; --line: #2a3340; --txt: #e8edf3; --mut: #93a1b3; --acc: #4da3ff; --bad: #ff6b6b; --warn: #ffb454; --ok: #51d88a; }
+@media (prefers-color-scheme: light) { :root { --bg: #f4f6f9; --card: #fff; --line: #dfe5ec; --txt: #16202c; --mut: #5b6b7d; --acc: #0b63e5; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--txt); font: 15px/1.5 system-ui, sans-serif; }
+.top { padding: 20px 24px 4px; }
+.top h1 { margin: 0; font-size: 22px; }
+.tag { font-size: 12px; background: var(--acc); color: #fff; border-radius: 4px; padding: 1px 7px; vertical-align: middle; }
+.sub { color: var(--mut); margin: 4px 0 12px; }
+main { padding: 0 24px 40px; max-width: 1200px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; margin: 12px 0; }
+.card h2 { margin: 0 0 10px; font-size: 16px; }
+label { display: block; margin: 8px 0; font-size: 13px; color: var(--mut); }
+input, textarea, select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--txt); font: inherit; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+.checks { display: flex; gap: 18px; flex-wrap: wrap; }
+.checks label { display: flex; gap: 6px; align-items: center; }
+.checks input { width: auto; }
+button { background: var(--acc); color: #fff; border: 0; border-radius: 6px; padding: 9px 16px; font: inherit; cursor: pointer; }
+button:hover { filter: brightness(1.1); }
+.error { color: var(--bad); margin-left: 10px; }
+.hidden { display: none !important; }
+.bar { height: 10px; background: var(--line); border-radius: 6px; overflow: hidden; margin-top: 12px; }
+#bar-fill { height: 100%; width: 0; background: var(--acc); transition: width .3s; }
+.cards { display: flex; gap: 10px; flex-wrap: wrap; }
+.stat { border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px; min-width: 100px; }
+.stat b { display: block; font-size: 20px; }
+.stat span { font-size: 12px; color: var(--mut); }
+.stat.bad b { color: var(--bad); } .stat.warn b { color: var(--warn); } .stat.ok b { color: var(--ok); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.chip { border: 1px solid var(--line); border-radius: 20px; padding: 4px 12px; font-size: 13px; cursor: pointer; background: transparent; color: var(--txt); }
+.chip.active { background: var(--acc); color: #fff; border-color: var(--acc); }
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+.toolbar input, .toolbar select { width: auto; margin: 0; }
+.toolbar button { background: transparent; border: 1px solid var(--line); color: var(--txt); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tbody tr { cursor: pointer; } tbody tr:hover { background: rgba(77,163,255,.08); }
+td.url { word-break: break-all; max-width: 280px; }
+.pill { border-radius: 4px; padding: 1px 7px; font-size: 12px; white-space: nowrap; }
+.pill.ok { background: rgba(81,216,138,.18); color: var(--ok); }
+.pill.broken, .pill.unreachable, .pill.redirect_loop { background: rgba(255,107,107,.18); color: var(--bad); }
+.pill.redirect, .pill.redirect_chain_long, .pill.canonicalized, .pill.noindex_destination, .pill.anchor_missing { background: rgba(255,180,84,.18); color: var(--warn); }
+.pill.other { background: var(--line); color: var(--mut); }
+#detail { position: fixed; right: 0; top: 0; bottom: 0; width: min(480px, 94vw); background: var(--card); border-left: 1px solid var(--line); padding: 18px; overflow: auto; z-index: 10; }
+#detail-close { float: right; background: transparent; color: var(--txt); font-size: 22px; padding: 0 8px; }
+#detail dl { display: grid; grid-template-columns: 110px 1fr; gap: 4px 10px; font-size: 13px; }
+#detail dt { color: var(--mut); } #detail dd { margin: 0; word-break: break-all; }
+#graph { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: transparent; }
+footer { padding: 0 24px 30px; color: var(--mut); font-size: 13px; }
