@@ -1,0 +1,19 @@
+{
+  "at": "2026-09-20T17:25:25.537Z",
+  "parts": [
+    {
+      "target": "fixture",
+      "pages": 9,
+      "links": 17,
+      "groups": {
+        "ok": 10,
+        "broken": 2,
+        "redirect": 1,
+        "redirect_loop": 1,
+        "anchor_missing": 1,
+        "noindex_destination": 1,
+        "canonicalized": 1
+      }
+    }
+  ]
+}

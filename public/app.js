@@ -1,4 +1,4 @@
-/* Link Auditor UI: progress, filters, issue groups, searchable table, detail + graph, CSV/JSON export. */
+/* Link Auditor UI: progress, filters, issue groups, searchable table, detail + graph, CSV/JSON export, history + re-crawl + diff. */
 let crawlId = null;
 let result = null;
 let activeGroup = '';
@@ -31,6 +31,7 @@ $('crawl-form').addEventListener('submit', async (e) => {
     exclude: $('f-exclude').value.split('\n').map((s) => s.trim()).filter(Boolean),
     includeExternal: $('f-external').checked,
     checkImages: $('f-images').checked,
+    checkResources: $('f-resources').checked,
     respectRobots: $('f-robots').checked,
   };
   $('btn-start').disabled = true;
@@ -66,6 +67,7 @@ async function poll() {
       $('progress').classList.add('hidden');
       $('btn-start').disabled = false;
       render();
+      loadHistory();
     } else if (data.status === 'error') {
       clearInterval(pollTimer);
       $('progress-text').textContent = `Failed: ${data.error || 'unknown error'}`;
@@ -88,7 +90,12 @@ function render() {
     stat(s.broken, 'broken', s.broken ? 'bad' : 'ok') +
     stat(s.redirects, 'redirects', s.redirects ? 'warn' : '') +
     stat(s.loops, 'loops', s.loops ? 'bad' : '') +
-    stat(s.unknown, 'UNKNOWN', s.unknown ? 'warn' : '');
+    stat(s.unknown, 'UNKNOWN', s.unknown ? 'warn' : '') +
+    stat(s.orphans ?? 0, 'orphans', s.orphans ? 'warn' : '');
+  const orphans = result.summary.orphanUrls || [];
+  $('orphan-box').classList.toggle('hidden', orphans.length === 0);
+  $('orphan-summary').textContent = `${orphans.length} orphan-ish page(s) — crawled but no internal link points here`;
+  $('orphan-list').innerHTML = orphans.map((u) => `<li>${esc(u)}</li>`).join('');
   const groups = Object.entries(s.groups || {}).sort((a, b) => b[1] - a[1]);
   $('groups').innerHTML = `<button class="chip${activeGroup === '' ? ' active' : ''}" data-g="">all (${s.links})</button>` +
     groups.map(([g, n]) => `<button class="chip${activeGroup === g ? ' active' : ''}" data-g="${esc(g)}">${esc(g)} (${n})</button>`).join('');
@@ -204,3 +211,87 @@ $('btn-csv').addEventListener('click', () => {
 $('btn-json').addEventListener('click', () => {
   if (crawlId) window.location = `/api/crawls/${encodeURIComponent(crawlId)}/export?format=json`;
 });
+
+$('btn-recrawl').addEventListener('click', async () => {
+  if (!crawlId) return;
+  $('recrawl-msg').textContent = '';
+  try {
+    const r = await fetch(`/api/crawls/${encodeURIComponent(crawlId)}/recrawl`, {
+      method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}',
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    crawlId = data.id;
+    result = null;
+    activeGroup = '';
+    $('results').classList.add('hidden');
+    $('progress').classList.remove('hidden');
+    clearInterval(pollTimer);
+    pollTimer = setInterval(poll, 1200);
+    poll();
+  } catch (err) {
+    $('recrawl-msg').textContent = String(err.message || err);
+  }
+});
+
+async function loadHistory() {
+  $('diff-msg').textContent = '';
+  try {
+    const r = await fetch('/api/crawls');
+    const list = await r.json();
+    $('history').innerHTML = list.map((c) =>
+      `<li><button data-load="${esc(c.id)}">Load</button> <code>${esc((c.id || '').slice(0, 8))}</code> ` +
+      `${esc(c.url || '')} — ${esc(c.status)} · pages=${c.summary?.pages ?? '?'} links=${c.summary?.links ?? '?'} ` +
+      `broken=${c.summary?.broken ?? '?'} orphans=${c.summary?.orphans ?? '?'}` +
+      `${c.recrawlOf ? ` · re-crawl of ${esc(String(c.recrawlOf).slice(0, 8))}` : ''}</li>`
+    ).join('') || '<li><i>no crawls yet</i></li>';
+    const done = list.filter((c) => c.status === 'done');
+    const opts = done.map((c) => `<option value="${esc(c.id)}">${esc((c.id || '').slice(0, 8))} · ${esc(c.url || '')}</option>`).join('');
+    $('diff-a').innerHTML = opts;
+    $('diff-b').innerHTML = opts;
+    if (done.length >= 2) {
+      $('diff-a').value = done[done.length - 1].id;
+      $('diff-b').value = done[0].id;
+    }
+    document.querySelectorAll('#history [data-load]').forEach((b) => {
+      b.addEventListener('click', () => {
+        crawlId = b.dataset.load;
+        result = null;
+        activeGroup = '';
+        $('results').classList.add('hidden');
+        $('progress').classList.remove('hidden');
+        clearInterval(pollTimer);
+        pollTimer = setInterval(poll, 1200);
+        poll();
+      });
+    });
+  } catch (err) {
+    $('diff-msg').textContent = String(err.message || err);
+  }
+}
+
+$('btn-history').addEventListener('click', loadHistory);
+
+$('btn-diff').addEventListener('click', async () => {
+  $('diff-msg').textContent = '';
+  const a = $('diff-a').value;
+  const b = $('diff-b').value;
+  if (!a || !b) { $('diff-msg').textContent = 'pick two finished crawls'; return; }
+  try {
+    const r = await fetch(`/api/crawls/${encodeURIComponent(a)}/diff/${encodeURIComponent(b)}`);
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
+    const L = d.links;
+    $('diff-out').innerHTML =
+      `<p>${d.sameScope ? '' : '<b>different scopes</b> · '}links: +${L.added} / −${L.removed} / ~${L.changed} ` +
+      `(fixed ${L.fixed}, newly broken ${L.newlyBroken}) · pages: +${d.pages.added} / −${d.pages.removed}</p>` +
+      (L.changedItems || []).slice(0, 200).map((c) =>
+        `<div class="diff-row"><code>${esc(c.targetUrl)}</code><br>` +
+        `<span>${esc(c.before.issue)} (${c.before.status ?? '?'}) → ${esc(c.after.issue)} (${c.after.status ?? '?'})</span></div>`
+      ).join('');
+  } catch (err) {
+    $('diff-msg').textContent = String(err.message || err);
+  }
+});
+
+loadHistory();

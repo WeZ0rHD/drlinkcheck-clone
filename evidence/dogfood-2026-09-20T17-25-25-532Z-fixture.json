@@ -1,0 +1,480 @@
+{
+  "target": "fixture (local controlled site)",
+  "summary": {
+    "pages": 9,
+    "links": 17,
+    "broken": 2,
+    "redirects": 1,
+    "loops": 1,
+    "unknown": 0,
+    "blocked": 0,
+    "excluded": 0,
+    "orphans": 1,
+    "orphanUrls": [
+      "http://127.0.0.1:16618/lonely"
+    ],
+    "groups": {
+      "ok": 10,
+      "broken": 2,
+      "redirect": 1,
+      "redirect_loop": 1,
+      "anchor_missing": 1,
+      "noindex_destination": 1,
+      "canonicalized": 1
+    },
+    "pageGroups": {
+      "ok": 5,
+      "broken": 1,
+      "redirect": 1,
+      "redirect_loop": 1,
+      "noindex_page": 1
+    }
+  },
+  "links": [
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "About us",
+      "targetUrl": "http://127.0.0.1:16618/about",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.715Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/about",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "ms": 1,
+        "headers": {
+          "connection": "keep-alive",
+          "content-type": "text/html; charset=utf-8",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "loop": false
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "Dead page",
+      "targetUrl": "http://127.0.0.1:16618/gone",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.716Z",
+      "renderer": "static",
+      "status": 404,
+      "statusLabel": "404",
+      "finalUrl": "http://127.0.0.1:16618/gone",
+      "issue": "broken",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "ms": 1,
+        "headers": {
+          "connection": "keep-alive",
+          "content-type": "text/html",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "loop": false
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "Old location",
+      "targetUrl": "http://127.0.0.1:16618/old",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.717Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/new",
+      "issue": "redirect",
+      "redirectHops": 1,
+      "chain": [
+        {
+          "url": "http://127.0.0.1:16618/old",
+          "status": 302,
+          "location": "/new"
+        }
+      ],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "ms": 2,
+        "headers": {
+          "connection": "keep-alive",
+          "content-type": "text/html; charset=utf-8",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "loop": false
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "Loop start",
+      "targetUrl": "http://127.0.0.1:16618/loop-a",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.720Z",
+      "renderer": "static",
+      "status": 302,
+      "statusLabel": "LOOP",
+      "finalUrl": "http://127.0.0.1:16618/loop-a",
+      "issue": "redirect_loop",
+      "redirectHops": 2,
+      "chain": [
+        {
+          "url": "http://127.0.0.1:16618/loop-a",
+          "status": 302,
+          "location": "/loop-b"
+        },
+        {
+          "url": "http://127.0.0.1:16618/loop-b",
+          "status": 302,
+          "location": "/loop-a"
+        }
+      ],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "ms": 3,
+        "headers": {
+          "connection": "keep-alive",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "location": "/loop-a",
+          "transfer-encoding": "chunked"
+        },
+        "loop": true
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "Bad anchor",
+      "targetUrl": "http://127.0.0.1:16618/page#missing-frag",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.723Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/page",
+      "issue": "anchor_missing",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "missing-frag",
+      "error": null,
+      "evidence": {
+        "ms": 2,
+        "headers": {
+          "connection": "keep-alive",
+          "content-type": "text/html; charset=utf-8",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "loop": false
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "Good anchor",
+      "targetUrl": "http://127.0.0.1:16618/page#exists",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.725Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/page",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "exists",
+      "error": null,
+      "evidence": {
+        "ms": 1,
+        "headers": {
+          "connection": "keep-alive",
+          "content-type": "text/html; charset=utf-8",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "loop": false
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "Noindex page",
+      "targetUrl": "http://127.0.0.1:16618/noindex",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.726Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/noindex",
+      "issue": "noindex_destination",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "ms": 1,
+        "headers": {
+          "connection": "keep-alive",
+          "content-type": "text/html; charset=utf-8",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "loop": false
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "Canonicalized page",
+      "targetUrl": "http://127.0.0.1:16618/canonical-src",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.727Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/canonical-src",
+      "issue": "canonicalized",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "ms": 1,
+        "headers": {
+          "connection": "keep-alive",
+          "content-type": "text/html; charset=utf-8",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "loop": false
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/",
+      "anchorText": "missing image",
+      "targetUrl": "http://127.0.0.1:16618/img-404.png",
+      "kind": "image",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.728Z",
+      "renderer": "static",
+      "status": 404,
+      "statusLabel": "404",
+      "finalUrl": "http://127.0.0.1:16618/img-404.png",
+      "issue": "broken",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "ms": 1,
+        "headers": {
+          "connection": "keep-alive",
+          "content-type": "text/plain",
+          "date": "Sun, 20 Sep 2026 17:25:25 GMT",
+          "keep-alive": "timeout=5",
+          "transfer-encoding": "chunked"
+        },
+        "loop": false
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/about",
+      "anchorText": "Home",
+      "targetUrl": "http://127.0.0.1:16618/",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.730Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reusedPage": true,
+        "contentType": "text/html; charset=utf-8",
+        "title": "Fixture home"
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/about",
+      "anchorText": "",
+      "targetUrl": "http://127.0.0.1:16618/about",
+      "kind": "resource",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.730Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/about",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reusedPage": true,
+        "contentType": "text/html; charset=utf-8",
+        "title": "About"
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/lonely",
+      "anchorText": "Home",
+      "targetUrl": "http://127.0.0.1:16618/",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.731Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reusedPage": true,
+        "contentType": "text/html; charset=utf-8",
+        "title": "Fixture home"
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/old",
+      "anchorText": "Home",
+      "targetUrl": "http://127.0.0.1:16618/",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.733Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reusedPage": true,
+        "contentType": "text/html; charset=utf-8",
+        "title": "Fixture home"
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/page",
+      "anchorText": "Home",
+      "targetUrl": "http://127.0.0.1:16618/",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.735Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reusedPage": true,
+        "contentType": "text/html; charset=utf-8",
+        "title": "Fixture home"
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/noindex",
+      "anchorText": "Home",
+      "targetUrl": "http://127.0.0.1:16618/",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.736Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reusedPage": true,
+        "contentType": "text/html; charset=utf-8",
+        "title": "Fixture home"
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/canonical-src",
+      "anchorText": "Home",
+      "targetUrl": "http://127.0.0.1:16618/",
+      "kind": "a",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.737Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reusedPage": true,
+        "contentType": "text/html; charset=utf-8",
+        "title": "Fixture home"
+      }
+    },
+    {
+      "sourceUrl": "http://127.0.0.1:16618/canonical-src",
+      "anchorText": "",
+      "targetUrl": "http://127.0.0.1:16618/about",
+      "kind": "resource",
+      "internal": true,
+      "observedAt": "2026-09-20T17:25:25.737Z",
+      "renderer": "static",
+      "status": 200,
+      "statusLabel": "200",
+      "finalUrl": "http://127.0.0.1:16618/about",
+      "issue": "ok",
+      "redirectHops": 0,
+      "chain": [],
+      "fragment": "",
+      "error": null,
+      "evidence": {
+        "reusedPage": true,
+        "contentType": "text/html; charset=utf-8",
+        "title": "About"
+      }
+    }
+  ]
+}

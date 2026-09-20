@@ -21,7 +21,7 @@ export function fixtureHandler() {
     if (p === '/sitemap.xml') {
       res.writeHead(200, { 'content-type': 'application/xml' });
       res.end(`<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` +
-        `<url><loc>http://FIXTURE/</loc></url><url><loc>http://FIXTURE/about</loc></url></urlset>`.replaceAll('http://FIXTURE', `http://${req.headers.host}`));
+        `<url><loc>http://FIXTURE/</loc></url><url><loc>http://FIXTURE/about</loc></url><url><loc>http://FIXTURE/lonely</loc></url></urlset>`.replaceAll('http://FIXTURE', `http://${req.headers.host}`));
       return;
     }
     switch (p) {
@@ -64,6 +64,9 @@ export function fixtureHandler() {
         return html(`<!doctype html><html><head><title>Hidden</title><meta name="robots" content="noindex, follow"></head><body><h1>Hidden</h1><a href="/">Home</a></body></html>`);
       case '/canonical-src':
         return html(`<!doctype html><html><head><title>Src</title><link rel="canonical" href="/about"></head><body><h1>Src</h1><a href="/">Home</a></body></html>`);
+      case '/lonely':
+        // reachable via sitemap only — nothing links here, so it must read as orphan-ish
+        return html(`<!doctype html><html><head><title>Lonely</title></head><body><h1>Lonely</h1><a href="/">Home</a></body></html>`);
       case '/img-404.png':
         res.writeHead(404, { 'content-type': 'text/plain' });
         res.end('no such image');

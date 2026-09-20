@@ -519,6 +519,28 @@ export async function crawl(startUrl, userOpts = {}) {
   const pageGroups = {};
   for (const p of Object.values(state.visitedPages)) pageGroups[p.issue] = (pageGroups[p.issue] || 0) + 1;
 
+  // orphan-ish pass: internal crawled pages (other than the start page) that
+  // no internal <a> link points to. Sitemap-seeded but never linked pages
+  // show up here — hence "orphan-ish", derivable from observed link graph only.
+  const inbound = new Map();
+  for (const l of state.links) {
+    if (l.kind !== 'a' || !l.internal) continue;
+    try {
+      const tk = normalizeKey(l.targetUrl);
+      if (state.visitedPages[tk]) inbound.set(tk, (inbound.get(tk) || 0) + 1);
+    } catch { /* ignore bad target */ }
+  }
+  let startKey = null;
+  try { startKey = normalizeKey(startHref); } catch { /* ignore */ }
+  const orphanUrls = [];
+  for (const [k, p] of Object.entries(state.visitedPages)) {
+    const count = inbound.get(k) || 0;
+    p.inbound = count;
+    p.orphan = k !== startKey && count === 0;
+    if (p.orphan) orphanUrls.push(p.finalUrl || p.url);
+  }
+  orphanUrls.sort();
+
   const result = {
     version: 1,
     startUrl: startHref,
@@ -535,6 +557,8 @@ export async function crawl(startUrl, userOpts = {}) {
       unknown: state.stats.unknown,
       blocked: state.stats.blocked,
       excluded: state.stats.excluded,
+      orphans: orphanUrls.length,
+      orphanUrls: orphanUrls.slice(0, 500),
       groups,
       pageGroups,
     },
