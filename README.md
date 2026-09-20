@@ -22,9 +22,21 @@ node scripts/dogfood.js   # fixture + polite https://example.com crawl → evide
 - Redirect chains (flagged `redirect_chain_long` past 3 hops) and **loops**
 - Broken links (4xx/5xx) with the actual status as evidence
 - Source page per link + anchor text; missing `#fragment` targets
+- Orphan-ish pages: crawled but no internal link points here (`summary.orphans`
+  + `summary.orphanUrls`, per-page `inbound` / `orphan`). "Ish" because
+  sitemap-seeded-but-unlinked pages count too — derived from the observed
+  link graph only, never guessed.
 - Canonical link + `noindex` (meta robots / `X-Robots-Tag`) basics
-- Images/resources: listed always, fetched only with `--images` / CLI flags
+- Images/assets: listed always, fetched only with `--images` / `--resources`
+  (UI checkboxes) — external images/resources are never fetched
 - `robots.txt` respected by default (+ `Crawl-delay`), `sitemap.xml` seeded
+- Project history: every finished crawl persists to `data/crawls/<id>.json`
+  (gitignored) and `GET /api/crawls` lists live + persisted runs
+- Re-crawl: `POST /api/crawls/:id/recrawl` re-runs stored options (overrides
+  allowed), linked via `recrawlOf`
+- Diff: `GET /api/crawls/:a/diff/:b` → added / removed / changed links
+  (with before+after evidence), fixed vs newly-broken, page churn,
+  `sameScope` flag when start URLs differ
 - Exclusions: substring or `/regex/` via UI textarea or `--exclude`
 - Bounded concurrency + per-host politeness delay + timeout per request
 
@@ -59,9 +71,11 @@ State (queue, pages, links) is written after every page and reloaded on `--resum
 | Method | Route | Description |
 |---|---|---|
 | POST | `/api/crawls` | `{ url, options }` → `{ id }` (crawl runs in background) |
-| GET | `/api/crawls/:id` | progress while running, full result when done |
+| GET | `/api/crawls/:id` | progress while running, full result when done (works after restart via persisted file) |
+| POST | `/api/crawls/:id/recrawl` | re-run with stored options (`{ options }` overrides) → `{ id, recrawlOf }` |
+| GET | `/api/crawls/:a/diff/:b` | deterministic diff of two finished crawls |
 | GET | `/api/crawls/:id/export?format=csv\|json` | download (409 until done) |
-| GET | `/api/crawls` | list sessions |
+| GET | `/api/crawls` | project history: live + persisted sessions, newest first |
 
 ## Limits (MVP)
 

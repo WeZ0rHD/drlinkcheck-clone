@@ -31,6 +31,7 @@
       <div class="checks">
         <label><input id="f-external" type="checkbox" checked> Check external links</label>
         <label><input id="f-images" type="checkbox"> Check images (fetch image URLs)</label>
+        <label><input id="f-resources" type="checkbox"> Check assets (fetch scripts/stylesheets)</label>
         <label><input id="f-robots" type="checkbox" checked> Respect robots.txt + sitemap</label>
       </div>
       <button type="submit" id="btn-start">Start crawl</button>
@@ -63,14 +64,33 @@
       </select>
       <button id="btn-csv">Export CSV</button>
       <button id="btn-json">Export JSON</button>
+      <button id="btn-recrawl" title="Run the same crawl again with stored options">Re-crawl</button>
       <span id="count"></span>
+      <span id="recrawl-msg" class="error"></span>
     </div>
+    <details id="orphan-box" class="hidden">
+      <summary id="orphan-summary"></summary>
+      <ul id="orphan-list"></ul>
+    </details>
     <table id="links">
       <thead><tr>
         <th>Source</th><th>Anchor</th><th>Target</th><th>Status</th><th>Issue</th><th>Observed</th>
       </tr></thead>
       <tbody></tbody>
     </table>
+  </section>
+
+  <section class="card" id="history-card">
+    <h2>3 · Project history &amp; diff</h2>
+    <div class="toolbar">
+      <button id="btn-history">Refresh history</button>
+      <label>A <select id="diff-a"></select></label>
+      <label>B <select id="diff-b"></select></label>
+      <button id="btn-diff">Diff A → B</button>
+      <span id="diff-msg" class="error"></span>
+    </div>
+    <ul id="history"></ul>
+    <div id="diff-out"></div>
   </section>
 
   <aside id="detail" class="hidden">
